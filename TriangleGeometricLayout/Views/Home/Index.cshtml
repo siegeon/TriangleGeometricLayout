@@ -1,0 +1,108 @@
+﻿    
+<div class="row">
+    <div class="col-xs-12">
+        <p>
+            Note the images have been scaled up 50px for each non-hypotenuse side of the triange to improve visability and make them easier to click. All of the calculations will be performed on the server as if
+            though the non-hypotenuse sides are 10px each. Click API to see to see the route details.
+        </p>
+    </div>
+
+</div>
+
+<div class="row">
+    <fieldset class="form-group">
+        <legend> 1.A Calculate the triangle coordinates for an image with right triangles such that given a row and column you can produce any of the triangles in the layout below.</legend>
+        <div class="row">
+            <div class="col-xs-4">
+                <div class="form-group">
+                    <label>Row</label>
+                    <input class="form-control" id="row" placeholder="Enter Row">
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <div class="form-group">
+                    <label>Column</label>
+                    <input class="form-control" id="column" placeholder="Enter Row">
+                </div>
+            </div>
+            <div class="col-xs-4">
+                <button id="submitButton" class="btn btn-primary" >Submit</button>
+            </div>
+        </div>       
+    </fieldset>
+
+
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <canvas id="canvas" width="300" height="300"></canvas>
+        </div>
+    </div>
+    
+    <fieldset class="form-group" >
+        <legend> 1.B Calculate the row and the column for the triangle.</legend>
+        <div class="row">
+            <div class="col-xs-3">
+                <div class="form-group">
+                    <label>P1</label>
+                    <input class="form-control" id="p1" placeholder="Point 1">
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div class="form-group">
+                    <label>P2</label>
+                    <input class="form-control" id="p2" placeholder="Point 2">
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <div class="form-group">
+                    <label>P3</label>
+                    <input class="form-control" id="p3" placeholder="Point 3">
+                </div>
+            </div>
+            <div class="col-xs-3">
+                <button id="submitButton2" class="btn btn-primary">Submit</button>
+            </div>
+        </div>       
+    </fieldset>
+
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", drawTriangles("row", "column", "p1", "p2", "p3"));
+    document.getElementById('submitButton').onclick = function () {
+        var xhr = new XMLHttpRequest();
+        var rowValue = document.getElementById("row").value;
+        var columnValue = document.getElementById("column").value;
+        xhr.open('GET', 'api/Points?row=' + rowValue + '&column=' + columnValue + '');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                alert('Triange is ' + JSON.parse(xhr.responseText));
+            }
+            else {
+                var msg = xhr.responseText.substr(0, xhr.responseText.indexOf("-"));
+                alert('Request failed.' + msg);
+            }
+        };
+        xhr.send();
+    }
+    document.getElementById('submitButton2').onclick = function () {
+        var xhr = new XMLHttpRequest();
+        var p1 = JSON.parse(document.getElementById("p1").value);
+        var p2 = JSON.parse(document.getElementById("p2").value);
+        var p3 = JSON.parse(document.getElementById("p3").value);
+        xhr.open('GET', 'api/RowColumn?x1=' + p1.x + '&y1=' + p1.y + '&x2=' + p2.x + '&y2=' + p2.y + '&x3=' + p3.x + '&y3=' + p3.y +'');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                alert('Triange is ' + JSON.parse(xhr.responseText));
+            }
+            else {
+                var msg = xhr.responseText.substr(0, xhr.responseText.indexOf("-"));
+                alert('Request failed.' + msg);
+            }
+        };
+        xhr.send();
+    }
+
+
+</script>
