@@ -14,13 +14,8 @@ namespace TriangleGeometricLayout.Areas.HelpPage.Controllers
         private const string ErrorViewName = "Error";
 
         public HelpController()
-            : this(GlobalConfiguration.Configuration)
         {
-        }
-
-        public HelpController(HttpConfiguration config)
-        {
-            Configuration = config;
+            Configuration = GlobalConfiguration.Configuration;
         }
 
         public HttpConfiguration Configuration { get; private set; }

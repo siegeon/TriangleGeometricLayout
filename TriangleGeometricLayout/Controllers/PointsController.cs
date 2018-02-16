@@ -1,25 +1,35 @@
 ﻿using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
+using System.Threading;
 using System.Web;
 using System.Web.Http;
 using Newtonsoft.Json;
 using TriangleGeometricLayout.BLL;
+using TriangleGeometricLayout.BLL.Abstract;
+using TriangleGeometricLayout.BLL.Concrete;
 
 namespace TriangleGeometricLayout.Controllers
 {
     public class PointsController : ApiController
     {
+        private readonly IInputValidator _inputValidator;
+        private readonly ITriangleCalculator _triangleCalculator;
+
+        public PointsController(IInputValidator inputValidator, ITriangleCalculator triangleCalculator)
+        {
+            _inputValidator = inputValidator;
+            _triangleCalculator = triangleCalculator;
+        }
         // GET api/values/5
         public string Get(string row, int column)
         {
-            row = row.ToUpper();
-            var rowIsValid = InputValidator.RowIsValid(row);
-            var columnIsValid = InputValidator.ColumnIsValid(column);
+            var rowIsValid = _inputValidator.RowIsValid(row);
+            var columnIsValid = _inputValidator.ColumnIsValid(column);
 
             if (!rowIsValid || !columnIsValid)
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 if (!rowIsValid)
                     sb.AppendLine($"Row: {row} is not a valid value - restrict request to A-F");
                 if (!columnIsValid)
@@ -28,10 +38,7 @@ namespace TriangleGeometricLayout.Controllers
 
             }
 
-            var triangle = TriangleCalculator.CalculateTriangle(row, column);
-            var result = JsonConvert.SerializeObject(triangle);
-
-            return result;
+            return JsonConvert.SerializeObject(_triangleCalculator.CalculateTriangle(row, column));
         }
     }
 }

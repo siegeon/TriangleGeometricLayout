@@ -1,4 +1,6 @@
-﻿namespace TriangleGeometricLayout.Controllers
+﻿using TriangleGeometricLayout.Controllers;
+
+namespace TriangleGeometricLayout.Domain
 {
     public class Triangle
     {
